@@ -1,6 +1,0 @@
-browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_notes_spa
-note over browser:
-when click on "Send" browser doesnt not reaload page because of preventDefault()
-it just pushes a new note to the array and reloads it
-then it sends the data to the server, updating the data.json
-end note
