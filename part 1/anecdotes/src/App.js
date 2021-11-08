@@ -8,6 +8,21 @@ const Button = ({ text, action }) => {
   )
 }
 
+const VoteButton = ({ text, action }) => {
+  return (
+    <>
+      <button onClick={action}>{text}</button>
+    </>
+  )
+}
+
+const DisplayTitle = ({ text }) => {
+  return (
+    <>
+      <h1>{text}</h1>
+    </>
+  )
+}
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -19,10 +34,10 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
 
-  const points = [0, 0, 0, 0, 0, 0, 0]
+  const votesArr = new Uint8Array(anecdotes.length)
    
   const [selected, setSelected] = useState(0)
-  const [votes, setVotes] = useState([])
+  const [points, setPoints] = useState(votesArr)
 
   const randomFromArrayLength = (array) => {
     let randomNumber = Math.floor(Math.random() * array.length)
@@ -33,17 +48,29 @@ const App = () => {
     let newSelected = randomFromArrayLength(anecdotes)
     setSelected(newSelected)
   }
-  
+
   const handleVote = () => {
-    let newVotes = selected[votes] + 1
-    setVotes(newVotes)
+    let newVotesArr = [...points]
+    // console.log("points", points)
+    // console.log("votesArr", votesArr)
+    // console.log("newVotesArr", newVotesArr)
+    newVotesArr[selected] += 1
+    // console.log("newVotesArr", newVotesArr)
+    setPoints(newVotesArr)
+
   }
+  // checking most voted
+  let mostVotedIndex = points.indexOf(Math.max(...points))
+  
   return (
     <>
-      <div>{anecdotes[selected]}</div>
-      <div>Has {points[votes]} votes</div>
-      <Button text='vote' action={handleVote} />
-      <Button text='next anecdote' action={handleNext} />
+      <DisplayTitle text='Anecdote of the day' />
+      <div>{anecdotes[selected]}</div> 
+      <Button text='next anecdote' action={handleNext}  /> <br></br> <br></br>
+      <div>Has {points[selected]} votes</div>
+      <VoteButton text='vote' action={handleVote}  /> <br></br><br></br>
+      <DisplayTitle text='Most voted anecdote' />
+      <div>{anecdotes[mostVotedIndex]}</div>
     </>
   )
 }
