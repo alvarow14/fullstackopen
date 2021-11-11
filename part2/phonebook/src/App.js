@@ -5,6 +5,7 @@ import SearchField from './components/SearchField'
 
 
 
+
 function App() {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -14,6 +15,8 @@ function App() {
   ])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ newSearch, setNewSearch ] = useState('')
+  const [ filtered, setFiltered ] = useState([])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -40,13 +43,25 @@ function App() {
   }
 
   const handleSearchChange = (e) => {
-    setNew
-  }
+    setNewSearch(e.target.value)
 
+    const filteredArr = []
+    for (let i = 0, longitud1 = persons.length; i < longitud1; i++) {
+      if (persons[i].name.toLowerCase().includes(e.target.value.toLowerCase())) {
+        filteredArr.push(persons[i])
+      }
+    }
+    setFiltered(filteredArr)
+  }
+  
   return (
     <>
       <h1>Phonebook</h1>
-      <SearchField persons={persons} />
+      <SearchField
+        filtered={filtered} 
+        handleSearchChange={handleSearchChange}
+        newSearch={newSearch}
+      />
       <Form
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
