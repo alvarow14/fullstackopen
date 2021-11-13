@@ -1,22 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Form from './components/Form'
 import Numbers from './components/Numbers'
 import SearchField from './components/SearchField'
+import axios from 'axios'
 
 
 
 
 function App() {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+
+  const [persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newSearch, setNewSearch ] = useState('')
   const [ filtered, setFiltered ] = useState([])
+  
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log(`response.data`, response.data)   
+        setPersons(response.data)
+    })
+  }, [])
+
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -44,6 +53,8 @@ function App() {
 
   const handleSearchChange = (e) => {
     setNewSearch(e.target.value)
+    console.log(`e.target.value`, e.target.value)
+    console.log(`newSearch`, newSearch)
 
     const filteredArr = []
     for (let i = 0, longitud1 = persons.length; i < longitud1; i++) {
