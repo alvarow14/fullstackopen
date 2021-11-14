@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import SearchField from './components/SearchField'
-import Results from './components/results/Results.jsx'
+import Results from './components/Results'
+import DisplayCountry from './components/DisplayCountry'
 
 
 function App() {
 
-  /* ESTADOS */
-  const [countries, setCountries] = useState([])
-  const [filtered, setFiltered] = useState([])
+ 
+  /* Búsqueda: estado y manejador del evento */
   const [search, setSearch] = useState('')
-  const [weather, setWeather] = useState([])
 
-  /* EFECTOS */
-  useEffect(() => {
+  const handleSearch = (e) => {
+    setSearch(e.target.value)
+    filterCountries(e.target.value)
+  }
+
+  /* Fetcheo y filtrado de paises: estados y manejadores */
+  const [countries, setCountries] = useState([]) //array de totales
+  const [filtered, setFiltered] = useState([]) //array de filtrados
+  const [country, setCountry] = useState() // objeto country final
+  
+  useEffect(() => { //fetcheo todo el array de objectos 250 y lo meto en countries
     axios 
       .get('https://restcountries.com/v2/all')
       .then(response => {
@@ -21,46 +29,59 @@ function App() {
       })
   }, [])
 
-  const api_key = process.env.REACT_APP_API_KEY
-
-  /* Variables globales */
-  // let country
-  // let weatherURL
-
+  //estableciendo el array de filtered
   
-  // toggle
-  // useEffect(() => {
-  //     axios 
-  //         .get(weatherURL)
-  //         .then(response => {
-  //             setWeather(response.data)
-  //             console.log(`response.data`, response.data)
-  //         })
-  // }, [weatherURL])
+  const filterCountries = (searchInput) => {
+    const filteredArr = []
 
-  /* MANEJADORES DE EVENTOS */
-
-  const handleSearch = (e) => {
-    setSearch(e.target.value)
-    filterCountries(e)
-  }
-  const filterCountries = (e) => {
-    let filteredCountries = []
 
     for (let i = 0, longitud = countries.length; i < longitud; i++) {
-      if (countries[i].name.toLowerCase().includes(e.target.value.toLowerCase())) {
-        filteredCountries.push(countries[i])
+      if (countries[i].name.toLowerCase().includes(searchInput.toLowerCase())) {
+        filteredArr.push(countries[i])
       }
     }
-    
-    setFiltered(filteredCountries)
-    // console.log(`filteredCountries`, filteredCountries)
-    // if (filteredCountries.length === 1) {
-    //   country = filteredCountries[0]
-    //   weatherURL = `http://api.weatherstack.com/current?access_key=${api_key}&query=${country.capital}`
-    // }
+
+    if (filteredArr === 1) {
+      setCountry(filteredArr[0])
+      console.log(`country`, country)
+    } else {
+      setFiltered(filteredArr)
+      console.log(`filtered`, filtered)
+    }
   }
 
+  /* haciendo el togleo */
+  const handleShow = (e) => {
+    setCountry(filtered[e.target.parentElement.id])
+  }
+
+  const weather = 'mucho viento'
+
+  return(
+    <>
+      <SearchField handleSearch={handleSearch} search={search} />
+      <Results filtered={filtered} handleShow={handleShow} />
+      <DisplayCountry country={country} weather={weather} />
+    </>
+  )
+}
+export default App
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* Sobre el toggle 
   const manualSearch = (name) => {
     let filteredCountries = []
 
@@ -75,21 +96,6 @@ function App() {
 
   const handleShowClick = (e) => {
     // manualSearch(e.target.parentElement.id)
-    <Results1 country={e.target.parentElement.id}
+    <Results1 country={e.target.parentElement.id} />
   }
-
-
-  return(
-    <>
-      <SearchField handleSearch={handleSearch} search={search} />
-      <Results
-        filtered={filtered}
-        handleShowClick={handleShowClick}
-        weather={weather}
-        // country={country}
-      />
-    </>
-  )
-}
-
-export default App
+  */

@@ -9,6 +9,7 @@ const SearchField = ({ handleSearch, search }) => {
     <>
       <h1>Search the country</h1>
       find countries <input
+        type="text"
         value={search}
         onChange={handleSearch}
       />

@@ -1,6 +1,8 @@
 import React from 'react'
 
 export default function CountryInfo({ country }) {
+    console.log(`country`, country)
+    
     return (
         <>
             <h1>Filtered country</h1>
